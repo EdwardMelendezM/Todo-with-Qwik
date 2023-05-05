@@ -1,0 +1,20 @@
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 220px;
+  min-width: 100vh;
+  flex-direction: column;
+}
+
+.button{
+  padding: 2px;
+}
+
+.containerItem{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 3px;
+  gap: 3px;
+}

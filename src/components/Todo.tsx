@@ -1,5 +1,5 @@
-import type { QwikSubmitEvent } from "@builder.io/qwik";
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore } from "@builder.io/qwik";
+import style from './todo.module.css'
 
 interface TodoI {
   id: string;
@@ -11,35 +11,58 @@ const listTodo: Array<TodoI> = [
     id: crypto.randomUUID(),
     text: 'Cocinar',
   },
-  {
+  { 
     id: crypto.randomUUID(),
     text: 'Lavar',
   },
 ];
 
 export default component$(() => {
+  const data = useStore([...listTodo])
   const formValue = useSignal("");
-  const setFormValue = $(function (this: HTMLElement, value: string) {
-    formValue.value = value;
-    console.log(formValue.value);
-  });
+
+  const deleteOne = $((id:string)=>{
+    if(!id) return null
+    const temp = [...data]
+    temp.filter(item=>item.id!==id)
+    data=[...temp]
+    console.log("Este es el Id",id);
+    return
+  })
+  
+  const addOne = $((text: string) => {
+    const newElement = {
+      id: crypto.randomUUID(),
+      text
+    }
+    data.push(newElement)
+    console.log("Nuevo elemento creado");
+    
+  })
   const handleChangeInput = $((e: any) => {
-    console.log(e);
-    setFormValue(e.target.value);
-  });
-  const handleSubmitForm = $((e: QwikSubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(e);
-    console.log("Enviando");
+    const valor = e.target.value
+    if (valor.trim().length < 2)
+      return
+    formValue.value = e.target.value
+    addOne(formValue.value)
+    e.target.value=''
   });
   return (
-    <div>
+    <div class={style.container}>
       <h2>Todo</h2>
-      <form onSubmit$={handleSubmitForm}>
-        <input value={formValue.value} onChange$={handleChangeInput} />
-      </form>
-      {listTodo.map((item) => (
-        <div key={item.id}>{item.text}</div>
+      <input onChange$={handleChangeInput} />
+      <input type="submit" value="Send" id="inputValue"/>
+      {data.map((item) => (
+        <div key={item.id} class={style.containerItem}>
+          <div>{item.text}</div>  
+          <button class={style.button}>Edit</button>
+          <button
+            class={style.button}
+            onClick$={()=>deleteOne(item.id)}
+            >
+            Delete
+          </button>
+        </div>
       ))}
     </div>
   );
