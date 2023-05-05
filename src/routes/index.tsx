@@ -1,12 +1,17 @@
 import { component$ } from '@builder.io/qwik';
 import CounterP from '~/components/CounterP';
+import Todo from '~/components/Todo';
 
 
 export default component$(() => {
   return (
     <div>
-        Hello word
-        <CounterP/>
+      <Todo/>
+      <hr />
+      Hello word  
+      <CounterP/>
+      <hr />
+
     </div>
   );
 });
